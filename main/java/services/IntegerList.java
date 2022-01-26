@@ -2,7 +2,7 @@ package services;
 
 import services.StringList;
 
-public interface IntList {
+public interface IntegerList {
 
     void print();
     void grow();
@@ -11,7 +11,7 @@ public interface IntList {
     // Добавление элемента.
     // Вернуть добавленный элемент
     // в качестве результата выполнения.
-    int add(int item);
+    Integer add(Integer item);
 
     // Добавление элемента
     // на определенную позицию списка.
@@ -20,7 +20,7 @@ public interface IntList {
     // выбросить исключение.
     // Вернуть добавленный элемент
     // в качестве результата выполнения.
-    int add(int index, int item);
+    Integer add(int index, Integer item);
 
     // Установить элемент
     // на определенную позицию,
@@ -29,45 +29,45 @@ public interface IntList {
     // если индекс меньше
     // фактического количества элементов
     // или выходит за пределы массива.
-    int set(int index, int item);
+    Integer set(int index, Integer item);
 
     // Удаление элемента.
     // Вернуть удаленный элемент
     // или исключение, если подобный
     // элемент отсутствует в списке.
-    int remove(int item);
+    Integer remove(Integer item);
 
     // Удаление элемента по индексу.
     // Вернуть удаленный элемент
     // или исключение, если подобный
     // элемент отсутствует в списке.
-    int removeByIndex(int index);
+    Integer removeByIndex(int index);
 
     // Проверка на существование элемента.
     // Вернуть true/false;
 
-    boolean contains(int element);
+    boolean contains(Integer element);
 
     // Поиск элемента.
     // Вернуть индекс элемента
     // или -1 в случае отсутствия.
-    int indexOf(int item);
+    Integer indexOf(Integer item);
 
     // Поиск элемента с конца.
     // Вернуть индекс элемента
     // или -1 в случае отсутствия.
-    int lastIndexOf(int item);
+    Integer lastIndexOf(Integer item);
 
     // Получить элемент по индексу.
     // Вернуть элемент или исключение,
     // если выходит за рамки фактического
     // количества элементов.
-    int get(int index);
+    Integer get(int index);
 
     // Сравнить текущий список с другим.
     // Вернуть true/false или исключение,
     // если передан null.
-    boolean equals(IntList otherList);
+    boolean equals(IntegerList otherList);
 
     // Вернуть фактическое количество элементов.
     int size();
@@ -83,7 +83,7 @@ public interface IntList {
     // Создать новый массив
     // из строк в списке
     // и вернуть его.
-    int[] toArray();
+    Integer[] toArray();
 
 
 }

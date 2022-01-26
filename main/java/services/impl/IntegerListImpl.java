@@ -3,48 +3,32 @@ package services.impl;
 import exceptions.ArrayIsEmptyException;
 import exceptions.IndexNotFoundException;
 import exceptions.IntNotFoundException;
-import services.IntList;
+import exceptions.StringNotFoundException;
+import services.IntegerList;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public class IntListImpl implements IntList {
-    private int size;
-    private int[] ints;
+public class IntegerListImpl implements IntegerList {
+    private int size = 0;
+    private Integer[] ints;
 
-    public IntListImpl() {
-        ints = new int[size];
+    public IntegerListImpl() {
+        ints = new Integer[size];
     }
 
-    private static void swapElements(int[] arr, int indexA, int indexB) {
-        int tmp = arr[indexA];
-        arr[indexA] = arr[indexB];
-        arr[indexB] = tmp;
-    }
-
-    public static int[] sortBubble(int[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            for (int j = 0; j < arr.length - 1 - i; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    swapElements(arr, j, j + 1);
-                }
+    public static Integer[] sortInsertion(Integer[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            Integer temp = arr[i];
+            int j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
             }
+            arr[j] = temp;
         }
         return arr;
     }
-
-    @Override
-    public void print() {
-        if (size != 0) {
-            System.out.println("Печатаем массив");
-            for (int i = 0; i < size; i++) {
-                System.out.println(ints[i]);
-            }
-        } else {
-            System.out.println("Пустой массив");
-        }
-    }
-
 
     @Override
     public void grow() {
@@ -54,37 +38,39 @@ public class IntListImpl implements IntList {
 
     @Override
     public void reduction() {
-        int[] copy = new int[size - 1];
-        for (int i = 0, j = 0; i < size(); i++) {
-            if (ints[i] != 0) {
-                copy[j++] = ints[i];
+        for (int i = 0; i < size - 1; i++) {
+            if (ints[i] == null) {
+                for (int j = i; j < size - 1; j++) {
+                    ints[j] = ints[j + 1];
+                }
             }
         }
         size = size - 1;
-        ints = Arrays.copyOf(copy, size);
+        ints = Arrays.copyOf(ints, size);
     }
 
     @Override
-    public int add(int item) {
+    public Integer add(Integer item) {
         grow();
         ints[size - 1] = item;
         return item;
     }
 
     @Override
-    public int add(int index, int item) {
+    public Integer add(int index, Integer item) {
         if (index < 0 || index >= size) {
             throw new IndexNotFoundException();
         }
-        int[] copy = Arrays.copyOf(ints, size);
         grow();
-        if (size - 1 - index >= 0) System.arraycopy(copy, index, ints, index + 1, size - 1 - index);
+        for (int i = size - 1; i > index; i--) {
+            ints[i] = ints[i - 1];
+        }
         ints[index] = item;
         return item;
     }
 
     @Override
-    public int set(int index, int item) {
+    public Integer set(int index, Integer item) {
         if (index < 0 || index >= size) {
             throw new IndexNotFoundException();
         }
@@ -93,41 +79,37 @@ public class IntListImpl implements IntList {
     }
 
     @Override
-    public int remove(int item) {
-        if (!contains(item)) {
-            throw new IntNotFoundException();
+    public Integer remove(Integer item) {
+        if (contains(item)) {
+            ints[indexOf(item)] = null;
+            reduction();
+            return item;
         }
-        for (int i = 0; i < size; i++) {
-            if (ints[i] == item) {
-                ints[i] = 0;
-                reduction();
-                return item;
-            }
-        }
-        return item;
+        throw new IntNotFoundException();
+
     }
 
     @Override
-    public int removeByIndex(int index) {
+    public Integer removeByIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexNotFoundException();
         }
-        int number = ints[index];
-        ints[index] = 0;
+        Integer number = ints[index];
+        ints[index] = null;
         reduction();
         return number;
     }
 
     @Override
-    public boolean contains(int element) {
-        int[] sortedInts = Arrays.copyOf(sortBubble(ints), size);
+    public boolean contains(Integer element) {
+        Integer[] sortedInts = Arrays.copyOf(sortInsertion(ints), size);
         int min = 0;
         int max = sortedInts.length - 1;
 
         while (min <= max) {
             int mid = (min + max) / 2;
 
-            if (element == sortedInts[mid]) {
+            if (element.equals(sortedInts[mid])) {
                 return true;
             }
 
@@ -142,9 +124,9 @@ public class IntListImpl implements IntList {
 
 
     @Override
-    public int indexOf(int item) {
+    public Integer indexOf(Integer item) {
         for (int i = 0; i < size; i++) {
-            if (ints[i] == (item)) {
+            if (ints[i].equals(item)) {
                 return i;
             }
         }
@@ -152,9 +134,9 @@ public class IntListImpl implements IntList {
     }
 
     @Override
-    public int lastIndexOf(int item) {
+    public Integer lastIndexOf(Integer item) {
         for (int i = size - 1; i > 0; i--) {
-            if (ints[i] == (item)) {
+            if (ints[i].equals(item)) {
                 return i;
             }
         }
@@ -162,7 +144,7 @@ public class IntListImpl implements IntList {
     }
 
     @Override
-    public int get(int index) {
+    public Integer get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexNotFoundException();
         }
@@ -170,7 +152,7 @@ public class IntListImpl implements IntList {
     }
 
     @Override
-    public boolean equals(IntList otherList) {
+    public boolean equals(IntegerList otherList) {
         if (otherList.isEmpty()) {
             throw new ArrayIsEmptyException();
         }
@@ -194,7 +176,7 @@ public class IntListImpl implements IntList {
     }
 
     @Override
-    public int[] toArray() {
+    public Integer[] toArray() {
         return Arrays.copyOf(ints, size());
     }
 
@@ -202,7 +184,7 @@ public class IntListImpl implements IntList {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IntListImpl intList = (IntListImpl) o;
+        IntegerListImpl intList = (IntegerListImpl) o;
         return size == intList.size && Arrays.equals(ints, intList.ints);
     }
 
@@ -211,5 +193,17 @@ public class IntListImpl implements IntList {
         int result = Objects.hash(size);
         result = 31 * result + Arrays.hashCode(ints);
         return result;
+    }
+
+    @Override
+    public void print() {
+        if (size != 0) {
+            System.out.println("Печатаем массив");
+            for (int i = 0; i < size; i++) {
+                System.out.println(ints[i]);
+            }
+        } else {
+            System.out.println("Пустой массив");
+        }
     }
 }
