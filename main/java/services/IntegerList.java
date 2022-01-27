@@ -6,7 +6,6 @@ public interface IntegerList {
 
     void print();
     void grow();
-    void reduction();
 
     // Добавление элемента.
     // Вернуть добавленный элемент
