@@ -3,22 +3,22 @@ package services.impl;
 import exceptions.ArrayIsEmptyException;
 import exceptions.IndexNotFoundException;
 import exceptions.IntNotFoundException;
-import exceptions.StringNotFoundException;
 import services.IntegerList;
 
 import java.util.Arrays;
 import java.util.Objects;
 
 public class IntegerListImpl implements IntegerList {
-    private int size = 0;
+    private int size = 2;
     private Integer[] ints;
+    private int elements = 0;
 
     public IntegerListImpl() {
         ints = new Integer[size];
     }
 
-    public static Integer[] sortInsertion(Integer[] arr) {
-        for (int i = 1; i < arr.length; i++) {
+    public Integer[] sortInsertion(Integer[] arr) {
+        for (int i = 1; i < elements; i++) {
             Integer temp = arr[i];
             int j = i;
             while (j > 0 && arr[j - 1] >= temp) {
@@ -32,7 +32,7 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public void grow() {
-        size = size + 1;
+        size = size * 2;
         ints = Arrays.copyOf(ints, size);
     }
 
@@ -51,8 +51,16 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public Integer add(Integer item) {
-        grow();
-        ints[size - 1] = item;
+        if (size == elements) {
+            grow();
+        }
+        for (int i = 0; i < size; i++) {
+            if (ints[i] == null) {
+                ints[i] = item;
+                elements++;
+                return item;
+            }
+        }
         return item;
     }
 
@@ -61,11 +69,14 @@ public class IntegerListImpl implements IntegerList {
         if (index < 0 || index >= size) {
             throw new IndexNotFoundException();
         }
-        grow();
+        if (size == elements) {
+            grow();
+        }
         for (int i = size - 1; i > index; i--) {
             ints[i] = ints[i - 1];
         }
         ints[index] = item;
+        elements++;
         return item;
     }
 
@@ -80,13 +91,17 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public Integer remove(Integer item) {
-        if (contains(item)) {
-            ints[indexOf(item)] = null;
-            reduction();
-            return item;
+        for (int i = 0; i < elements; i++) {
+            if (ints[i].equals(item)) {
+                for (int j = i; j < elements; j++) {
+                    ints[j] = ints[j + 1];
+                }
+                ints[elements] = null;
+                elements--;
+                return item;
+            }
         }
         throw new IntNotFoundException();
-
     }
 
     @Override
@@ -95,14 +110,17 @@ public class IntegerListImpl implements IntegerList {
             throw new IndexNotFoundException();
         }
         Integer number = ints[index];
-        ints[index] = null;
-        reduction();
+        for (int i = index; i < elements; i++) {
+            ints[i] = ints[i + 1];
+        }
+        elements--;
         return number;
     }
 
     @Override
     public boolean contains(Integer element) {
-        Integer[] sortedInts = Arrays.copyOf(sortInsertion(ints), size);
+
+        Integer[] sortedInts = Arrays.copyOf(sortInsertion(ints), elements);
         int min = 0;
         int max = sortedInts.length - 1;
 
@@ -112,7 +130,6 @@ public class IntegerListImpl implements IntegerList {
             if (element.equals(sortedInts[mid])) {
                 return true;
             }
-
             if (element < sortedInts[mid]) {
                 max = mid - 1;
             } else {
@@ -166,13 +183,14 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return elements == 0;
     }
 
     @Override
     public void clear() {
-        ints = Arrays.copyOf(ints, 0);
-        size = 0;
+        for (int i = 0; i < elements; i++) {
+            ints[i] = null;
+        }
     }
 
     @Override
