@@ -3,8 +3,7 @@ package services;
 public interface StringList {
     void print();
 
-    void grow();
-    void reduction();
+
 
     // Добавление элемента.
     // Вернуть добавленный элемент

@@ -62,14 +62,14 @@ public class IntegerListImpl implements IntegerList {
         }
     }
 
-    @Override
-    public void grow() {
+
+    private void grow() {
         size = size * 2;
         ints = Arrays.copyOf(ints, size);
     }
 
-    @Override
-    public void reduction() {
+
+    private void reduction() {
         for (int i = 0; i < size - 1; i++) {
             if (ints[i] == null) {
                 for (int j = i; j < size - 1; j++) {

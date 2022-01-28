@@ -11,7 +11,6 @@ import java.util.Objects;
 
 public class StringListImpl implements StringList {
 
-
     private int size;
     private String[] strings;
 
@@ -31,14 +30,14 @@ public class StringListImpl implements StringList {
         }
     }
 
-    @Override
-    public void grow() {
+
+    private void grow() {
         size = size + 1;
         strings = Arrays.copyOf(strings, size);
     }
 
-    @Override
-    public void reduction() {
+
+    private void reduction() {
         String[] copy = new String[size - 1];
         for (int i = 0, j = 0; i < size(); i++) {
             if (strings[i] != null) {

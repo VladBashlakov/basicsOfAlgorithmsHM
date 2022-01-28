@@ -5,7 +5,7 @@ import services.StringList;
 public interface IntegerList {
 
     void print();
-    void grow();
+
 
     // Добавление элемента.
     // Вернуть добавленный элемент
